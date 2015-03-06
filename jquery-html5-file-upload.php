@@ -381,7 +381,11 @@ function jquery_html5_file_upload_hook() {
 }
 
 function jquery_file_upload_shortcode() {
-      jquery_html5_file_upload_hook();
+  ob_start();
+  jquery_html5_file_upload_hook();
+  $output_string=ob_get_contents();
+  ob_end_clean();
+  return $output_string;
 }
 
 /* Add the resources */
