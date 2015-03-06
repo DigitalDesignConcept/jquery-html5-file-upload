@@ -33,7 +33,7 @@ function jquery_html5_file_upload_install() {
 	if (!is_dir($upload_dir)) {
 		$is_success=mkdir($upload_dir, '0755', true);
 		if(!$is_success)
-			die('Unable to create a directory within the upload folder');
+			die('Impossible de creer un répertoire dans le dossier d''upload');
 	}
 }
 
@@ -46,7 +46,7 @@ function jquery_html5_file_upload_remove() {
 	delete_option('jqhfu_thumbnail_height');
 }
 
-if(isset($_POST['savesetting']) && $_POST['savesetting']=="Save Setting")
+if(isset($_POST['savesetting']) && $_POST['savesetting']=="Enregistrer")
 {
 	update_option("jqhfu_accepted_file_types", $_POST['accepted_file_types']);
 	update_option("jqhfu_inline_file_types", $_POST['inline_file_types']);
@@ -57,7 +57,7 @@ if(isset($_POST['savesetting']) && $_POST['savesetting']=="Save Setting")
 
 // Add settings link on plugin page
 function jquery_html5_file_upload_settings_link($links) { 
-  $settings_link = '<a href="options-general.php?page=jquery-html5-file-upload-setting.php">Settings</a>'; 
+  $settings_link = '<a href="options-general.php?page=jquery-html5-file-upload-setting.php">Réglages</a>'; 
   array_unshift($links, $settings_link); 
   return $links; 
 }
@@ -67,14 +67,14 @@ add_filter("plugin_action_links_$plugin", 'jquery_html5_file_upload_settings_lin
 
 if ( is_admin() ){
 
-/* Call the html code */
-add_action('admin_menu', 'jquery_html5_file_upload_admin_menu');
-
-
-function jquery_html5_file_upload_admin_menu() {
-add_options_page('JQuery HTML5 File Upload Setting', 'JQuery HTML5 File Upload Setting', 'administrator',
-'jquery-html5-file-upload-setting', 'jquery_html5_file_upload_html_page');
-}
+  /* Call the html code */
+  add_action('admin_menu', 'jquery_html5_file_upload_admin_menu');
+  
+  
+  function jquery_html5_file_upload_admin_menu() {
+  add_options_page('JQuery HTML5 File Upload Setting', 'JQuery HTML5 File Upload Setting', 'administrator',
+  'jquery-html5-file-upload-setting', 'jquery_html5_file_upload_html_page');
+  }
 }
 
 function jquery_html5_file_upload_html_page() {
@@ -84,59 +84,59 @@ $args = array(
     'selected'                => $_POST['user']
 );
 ?>
-<h2>JQuery HTML5 File Upload Setting</h2>
+<h2>Réglage JQuery HTML5 File Upload</h2>
 
 <form method="post" >
 <?php wp_nonce_field('update-options'); ?>
 
 <table >
 <tr >
-<td>Accepted File Types</td>
+<td>Types de fichiers acceptés</td>
 <td >
 <input type="text" name="accepted_file_types" value="<?php print(get_option('jqhfu_accepted_file_types')); ?>" />&nbsp;filetype seperated by | (e.g. gif|jpeg|jpg|png)
 </td>
 </tr>
 <tr >
-<td>Inline File Types</td>
+<td>Types de fichier en ligne</td>
 <td >
 <input type="text" name="inline_file_types" value="<?php print(get_option('jqhfu_inline_file_types')); ?>" />&nbsp;filetype seperated by | (e.g. gif|jpeg|jpg|png)
 </td>
 </tr>
 <tr >
-<td>Maximum File Size</td>
+<td>Taille de fichier maximum</td>
 <td >
 <input type="text" name="maximum_file_size" value="<?php print(get_option('jqhfu_maximum_file_size')); ?>" />&nbsp;MB
 </td>
 </tr>
 <tr >
-<td>Thumbnail Width </td>
+<td>Largeur miniature </td>
 <td >
 <input type="text" name="thumbnail_width" value="<?php print(get_option('jqhfu_thumbnail_width')); ?>" />&nbsp;px
 </td>
 </tr
 <tr >
-<td>Thumbnail Height </td>
+<td>Hauteur miniature </td>
 <td >
 <input type="text" name="thumbnail_height" value="<?php print(get_option('jqhfu_thumbnail_height')); ?>" />&nbsp;px
 </td>
 </tr>
 <tr>
 <td colspan="2">
-<input type="submit" name="savesetting" value="Save Setting" />
+<input type="submit" name="savesetting" value="Enregistrer" />
 </td>
 </tr>
 </table>
 <br/>
 <hr/>
-<h2>View Uploaded Files</h2>
+<h2>Voir les fichiers envoyés</h2>
 <table >
 <tr >
-<td>Select User</td>
+<td>Sélectionner l'utilisateur</td>
 <td >
 <?php wp_dropdown_users($args); ?> 
 </td>
 <td>
-<input type="submit" name="viewfiles" value="View Files" /> &nbsp; <input type="submit" name="viewguestfiles" value="View Guest Files" />
+<input type="submit" name="viewfiles" value="Voir les fichiers" /> &nbsp; <input type="submit" name="viewguestfiles" value="Voir les fichiers invité" />
 </td>
 </tr>
 <tr>
@@ -145,7 +145,7 @@ $args = array(
 <tr>
 <td>
 <?php
-if(isset($_POST['viewfiles']) && $_POST['viewfiles']=='View Files')
+if(isset($_POST['viewfiles']) && $_POST['viewfiles']=='Voir les fichiers')
 {
 if ($_POST['user']) {
 	$upload_array = wp_upload_dir();
@@ -163,7 +163,7 @@ if ($_POST['user']) {
 } 
 }
 else
-if(isset($_POST['viewguestfiles']) && $_POST['viewguestfiles']=='View Guest Files')
+if(isset($_POST['viewguestfiles']) && $_POST['viewguestfiles']=='Voir les fichiers invité')
 {
 	$upload_array = wp_upload_dir();
 	$imgpath=$upload_array['basedir'].'/files/guest/';
@@ -222,8 +222,8 @@ function jqhfu_load_ajax_function()
 	$current_user_id=$current_user->ID;
 	if(!isset($current_user_id) || $current_user_id=='')
 		$current_user_id='guest';
-	$upload_handler = new UploadHandler(null,$current_user_id,true,null);
-	die(); 
+  $upload_handler = new UploadHandler(null,$current_user_id,true,null);
+	wp_die(); 
 }
 
 function jqhfu_add_inline_script() {
@@ -288,12 +288,12 @@ function jquery_html5_file_upload_hook() {
        <div class="fileupload-buttons">
             <!-- The fileinput-button span is used to style the file input field as button -->
             <label class="jqhfu-file-container">
-              Add files...
+             Sélectionner des Fichiers
                 <input type="file" name="files[]" multiple class="jqhfu-inputfile">
             </label>
-			<button type="submit" class="start jqhfu-button">Start upload</button>
-            <button type="reset" class="cancel jqhfu-button">Cancel upload</button>
-            <button type="button" class="delete jqhfu-button">Delete</button>
+			<button type="submit" class="start jqhfu-button">Envoyer</button>
+            <button type="reset" class="cancel jqhfu-button">Abandonner</button>
+            <button type="button" class="delete jqhfu-button">Effacer</button>&nbsp;&nbsp;&nbsp;
             <input type="checkbox" class="toggle">
             <!-- The global file processing state -->
             <span class="fileupload-process"></span>
@@ -334,15 +334,15 @@ function jquery_html5_file_upload_hook() {
             <strong class="error"></strong>
         </td>
         <td>
-            <p class="size">Processing...</p>
+            <p class="size">Traitement...</p>
             <div class="progress"></div>
         </td>
         <td>
             {% if (!i && !o.options.autoUpload) { %}
-                <button class="start jqhfu-button" disabled>Start</button>
+                <button class="start jqhfu-button" disabled>Envoyer</button>
             {% } %}
             {% if (!i) { %}
-                <button class="cancel jqhfu-button">Cancel</button>
+                <button class="cancel jqhfu-button">Abandonner</button>
             {% } %}
         </td>
     </tr>
@@ -364,14 +364,14 @@ function jquery_html5_file_upload_hook() {
                 <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
             </p>
             {% if (file.error) { %}
-                <div><span class="error">Error</span> {%=file.error%}</div>
+                <div><span class="error">Erreur</span> {%=file.error%}</div>
             {% } %}
         </td>
         <td>
             <span class="size">{%=o.formatFileSize(file.size)%}</span>
         </td>
         <td>
-            <button class="delete jqhfu-button" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}&action=load_ajax_function"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>Delete</button>
+            <button class="delete jqhfu-button" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}&action=load_ajax_function"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>Effacer</button>
             <input type="checkbox" name="delete" value="1" class="toggle">
         </td>
     </tr>
